@@ -37,8 +37,9 @@ public class GameController : MonoBehaviour
         {
             _soundManager.PlayMusic(Sound.GAMEOVER_MUSIC);
         }
-        
 
+
+        BulletManager.Instance();
     }
 
     public void LoadGameScene()
