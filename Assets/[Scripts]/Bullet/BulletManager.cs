@@ -53,7 +53,7 @@ public class BulletManager : MonoBehaviour
         return bullet;
     }
 
-    public GameObject GetBullet()
+    public GameObject GetBullet(Vector2 position)
     {
         if( _bulletPool.Count <= 0 )
         {
@@ -61,6 +61,8 @@ public class BulletManager : MonoBehaviour
         }
 
         GameObject bullet = _bulletPool.Dequeue();
+
+        bullet.transform.position = position;
 
         bullet.SetActive(true);
 
