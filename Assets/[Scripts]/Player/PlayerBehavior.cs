@@ -220,6 +220,12 @@ public class PlayerBehavior : MonoBehaviour
 
             StartCoroutine(CameraShakeRoutine());
 
+        }
+
+        else if (collision.CompareTag("Bullet"))
+        {
+            _healthBarController.TakeDamage(15);
+            _soundManager.PlaySound(Channel.PLAYER_HURT_CHANNEL, Sound.PLAYER_HURT_SFX);
 
         }
     }
