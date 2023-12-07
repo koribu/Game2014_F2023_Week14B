@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBehavior : MonoBehaviour
+public class EnemyBehavior : MonoBehaviour, IDamageable
 {
     [SerializeField]
     float _speed = 5;
@@ -22,6 +22,10 @@ public class EnemyBehavior : MonoBehaviour
     LayerMask _groundLayers;
 
     int _hitDamage = 25;
+
+    bool _isShooting = false;
+
+    float _health = 100;
     // Start is called before the first frame update
     void Start()
     {
@@ -35,7 +39,7 @@ public class EnemyBehavior : MonoBehaviour
         _isThereGroundToStepOn = Physics2D.Linecast(_groundCheckPoint.position, _frontGroundPoint.position,_groundLayers);
         _isThereAnyObstacle = Physics2D.Linecast(_groundCheckPoint.position,_frontObstaclePoint.position,_groundLayers);
 
-        if(_isGrounded )
+        if(_isGrounded && !_isShooting )
         {
             
             if ((!_isThereGroundToStepOn || _isThereAnyObstacle))
@@ -58,6 +62,11 @@ public class EnemyBehavior : MonoBehaviour
         transform.localScale = new Vector3(transform.localScale.x * -1, 1, 1);
     }
 
+    public void SetIsShooting(bool state)
+    {
+        _isShooting = state;
+    }
+
     public float GetHitDamageAmount()
         { return _hitDamage; }
 
@@ -68,4 +77,13 @@ public class EnemyBehavior : MonoBehaviour
         Debug.DrawLine(_groundCheckPoint.position, _frontObstaclePoint.position, Color.green, .001f);
     }
 
+    public void Damage(float damage)
+    {
+        _health -= damage;
+
+        if(_health <= 0)
+        {
+            Destroy(gameObject);
+        }
+    }
 }

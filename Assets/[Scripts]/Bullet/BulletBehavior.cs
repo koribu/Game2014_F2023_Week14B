@@ -51,6 +51,15 @@ public class BulletBehavior : MonoBehaviour
         BulletManager.Instance().ReturnBullet(gameObject);
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        
+        if(collision.CompareTag("Player"))
+        {
+            collision.GetComponent<IDamageable>().Damage(5);
+        }
+    }
 
-    
+
+
 }

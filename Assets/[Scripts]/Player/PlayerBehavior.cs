@@ -1,9 +1,10 @@
 using Cinemachine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerBehavior : MonoBehaviour
+public class PlayerBehavior : MonoBehaviour, IDamageable
 {
     Rigidbody2D _rigidbody;
 
@@ -195,38 +196,43 @@ public class PlayerBehavior : MonoBehaviour
         _isRoutineStated = false;
     }
 
+    public void Damage(float damage)
+    {
+        _healthBarController.TakeDamage(damage);
+
+        _soundManager.PlaySound(Channel.PLAYER_HURT_CHANNEL, Sound.PLAYER_HURT_SFX);
+
+        StartCoroutine(CameraShakeRoutine());
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Enemy"))
         {
             //get damage
-            _healthBarController.TakeDamage(collision.GetComponent<EnemyBehavior>().GetHitDamageAmount());
+            Damage(collision.GetComponent<EnemyBehavior>().GetHitDamageAmount());
 
-            _soundManager.PlaySound(Channel.PLAYER_HURT_CHANNEL, Sound.PLAYER_HURT_SFX);
-
-            StartCoroutine(CameraShakeRoutine());
+            //It also hurts enemy
+            collision.GetComponent<IDamageable>().Damage(30);
         }
         else if (collision.CompareTag("Hazard"))
         {
-            _healthBarController.TakeDamage(10);
-            _soundManager.PlaySound(Channel.PLAYER_HURT_CHANNEL, Sound.PLAYER_HURT_SFX);
+            Damage(10);
 
             // From hazard to opposite direction
             Vector2 dir = transform.position - collision.transform.position;
 
             _rigidbody.AddForce(dir * _hurtJumpAmount, ForceMode2D.Impulse);
 
-
-            StartCoroutine(CameraShakeRoutine());
-
         }
 
         else if (collision.CompareTag("Bullet"))
         {
-            _healthBarController.TakeDamage(15);
-            _soundManager.PlaySound(Channel.PLAYER_HURT_CHANNEL, Sound.PLAYER_HURT_SFX);
+            Damage(15);
+           
 
         }
     }
+
+
 }

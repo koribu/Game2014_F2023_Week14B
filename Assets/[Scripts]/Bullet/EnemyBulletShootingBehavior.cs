@@ -6,9 +6,12 @@ public class EnemyBulletShootingBehavior : MonoBehaviour
 {
 
     PlayerDetection _playerDetection;
+    EnemyBehavior _enemyBehavior;
 
     [SerializeField]
     Transform _bulletSpawnPoint;
+
+
 
     bool _isShooting = false;
 
@@ -16,6 +19,7 @@ public class EnemyBulletShootingBehavior : MonoBehaviour
     void Start()
     {
         _playerDetection = GetComponentInChildren<PlayerDetection>();
+        _enemyBehavior = GetComponent<EnemyBehavior>();
     }
 
     // Update is called once per frame
@@ -35,11 +39,15 @@ public class EnemyBulletShootingBehavior : MonoBehaviour
     {
         _isShooting = true;
 
+        _enemyBehavior.SetIsShooting(true);
+
         BulletManager.Instance().GetBullet(_bulletSpawnPoint.position);
 
         yield return new WaitForSeconds(1);
 
         _isShooting = false;
+
+        _enemyBehavior.SetIsShooting(false);
 
 
     }
