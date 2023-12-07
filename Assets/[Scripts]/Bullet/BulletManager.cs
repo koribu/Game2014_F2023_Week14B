@@ -66,6 +66,8 @@ public class BulletManager : MonoBehaviour
 
         bullet.SetActive(true);
 
+        bullet.GetComponent<BulletBehavior>().Activate();
+
         return bullet;
     }
 

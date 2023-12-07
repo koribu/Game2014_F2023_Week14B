@@ -10,6 +10,8 @@ public class EnemyBulletShootingBehavior : MonoBehaviour
     [SerializeField]
     Transform _bulletSpawnPoint;
 
+    bool _isShooting = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,10 +22,24 @@ public class EnemyBulletShootingBehavior : MonoBehaviour
     void FixedUpdate()
     {
         
-        if(_playerDetection.GetLOS())
+        if(_playerDetection.GetLOS() && !_isShooting)
         {
-            BulletManager.Instance().GetBullet(_bulletSpawnPoint.position);
+            StartCoroutine(BulletShootingRoutine());
         }
+
+
+    }
+
+
+    IEnumerator BulletShootingRoutine()
+    {
+        _isShooting = true;
+
+        BulletManager.Instance().GetBullet(_bulletSpawnPoint.position);
+
+        yield return new WaitForSeconds(1);
+
+        _isShooting = false;
 
 
     }
